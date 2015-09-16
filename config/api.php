@@ -64,12 +64,12 @@ return [
     | Default API Domain
     |--------------------------------------------------------------------------
     |
-    | A default domain to use for your API routes s o you don't have to
+    | A default domain to use for your API routes so you don't have to
     | specify it for each group.
     |
     */
 
-    'domain' => env('API_DOMAIN', null),
+    'domain' => env('API_DOMAIN', '45.55.241.20'),
 
     /*
     |--------------------------------------------------------------------------
