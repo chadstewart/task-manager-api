@@ -14,7 +14,7 @@
 $api = app(Dingo\Api\Routing\Router::class);
 
 $api->version('v1', function ($api) {
-	$api->get('/', 'App\http\Controllers\HomeController@index');
+	$api->get('/', 'HomeController@index');
 	$api->resource('/tasks', 'App\http\Controllers\TasksController');
 });
 
