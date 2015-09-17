@@ -15,9 +15,11 @@ $api = app(Dingo\Api\Routing\Router::class);
 
 $api->version('v1', function ($api) {
 	$api->get('/', 'App\Http\Controllers\HomeController@index');
-	$api->resource('/tasks', 'App\Http\Controllers\TasksController');
+	$api->resource('tasks', 'App\Http\Controllers\TasksController');
+	$api->resource('activitybooks', 'App\Http\Controllers\ActivitybookController');
 });
 
 
 //Route::get('/', 'HomeController@index');
 //Route::resource('/tasks', 'TasksController');
+//Route::resource('activitybooks', 'ActivitybooksController');

@@ -17,15 +17,16 @@ class HomeController extends Controller
     public function index()
     {
         return [
-            'tasks_url' => url('/tasks'),
-            'task_url' => url('/tasks/{task}'),
-            'checklists_url' => url('/checklists'),
-            'checklist_url' => url('/checklists/{checklist}'),
+            'activitybooks_url' => url('/activitybooks'),
+            'tasks_url' => url('/tasks')
+            //'task_url' => url('/tasks/{task}'),
+            //'checklists_url' => url('/checklists'),
+            //'checklist_url' => url('/checklists/{checklist}'),
             //need to be done later
-            'taskbooks_url' => url('/taskbooks'),
-            'taskbook_url' => url('/taskbooks/{taskbook}'),
-            'users_url' => url('/users'),
-            'user_url' => url('/users/{user}'),
+            //'taskbooks_url' => url('/taskbooks'),
+            //'taskbook_url' => url('/taskbooks/{taskbook}'),
+            //'users_url' => url('/users'),
+            //'user_url' => url('/users/{user}'),
         ];
     }
 }
