@@ -61,9 +61,9 @@ class ActivitybookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $request->all();
-        if(Activitybook::update($request->all())){
-            return "Activitybook created successfully.";
+        $Activitybook = Activitybook::findOrFail($id);
+        if($Activitybook->update($request->all())){
+            return "Activitybook updated successfully.";
         } else{
             return $this->response->error('Activitybook could not be created.', 404);
         }

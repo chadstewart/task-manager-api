@@ -18,6 +18,7 @@ class HomeController extends Controller
     {
         return [
             'activitybooks_url' => url('/activitybooks'),
+            'activitybook_url' => url('/activitybooks/{activitybook}'),
             'tasks_url' => url('/tasks')
             //'task_url' => url('/tasks/{task}'),
             //'checklists_url' => url('/checklists'),
