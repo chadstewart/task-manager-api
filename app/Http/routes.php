@@ -21,5 +21,5 @@ $api->version('v1', function ($api) {
 
 
 //Route::get('/', 'HomeController@index');
-//Route::resource('/tasks', 'TasksController');
+//Route::resource('test', 'TasksController');
 //Route::resource('activitybooks', 'ActivitybooksController');

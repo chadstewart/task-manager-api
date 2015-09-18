@@ -18,7 +18,7 @@ class Activitybook extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'creation_time', 'active'];
+    protected $fillable = ['name', 'active'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -26,4 +26,15 @@ class Activitybook extends Model
      * @var array
      */
     protected $hidden = ['user_id'];
+
+
+    /**
+     * An Activitybook can have many Activities
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function activities()
+    {
+        return $this->hasMany('App\Activity');
+    }
 }

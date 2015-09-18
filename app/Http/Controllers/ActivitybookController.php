@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Activitybook;
+use Dingo\Api\Routing\Helpers;
 
 class ActivitybookController extends Controller
 {
+
+    use Helpers;
+
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +33,11 @@ class ActivitybookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Activitybook::create($request->all())){
+            return "Activitybook created successfully.";
+        } else{
+            return $this->response->error('Activitybook could not be created.', 404);
+        }
     }
 
     /**
@@ -40,7 +48,7 @@ class ActivitybookController extends Controller
      */
     public function show($id)
     {
-        //
+        return Activitybook::with('activities')->findOrFail($id);
     }
 
 
@@ -53,7 +61,12 @@ class ActivitybookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $request->all();
+        if(Activitybook::update($request->all())){
+            return "Activitybook created successfully.";
+        } else{
+            return $this->response->error('Activitybook could not be created.', 404);
+        }
     }
 
     /**
@@ -64,6 +77,10 @@ class ActivitybookController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(Activitybook::destroy($id)){
+            return "Activitybook deleted successfully.";
+        } else{
+            return $this->response->error('Activity book does not exist.', 404);
+        }
     }
 }
