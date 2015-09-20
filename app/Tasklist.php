@@ -30,11 +30,22 @@ class Tasklist extends Model
 
     /**
      * An Tasklist belongs to an Activity
-     * @follow NEVER
+     * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function activitybook()
     {
         return $this->belongsTo('App\Activity');
     }
+    
+    /**
+     * An Tasklist has many tasks
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function activitybook()
+    {
+        return $this->hasMany('App\Task');
+    }
+    
 }
