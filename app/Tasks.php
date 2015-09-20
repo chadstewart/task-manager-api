@@ -33,7 +33,7 @@ class Tasks extends Model
      * @follow NEVER
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function activitybook()
+    public function tasklist()
     {
         return $this->belongsTo('App\Tasklist');
     }
