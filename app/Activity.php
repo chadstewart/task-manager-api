@@ -29,14 +29,23 @@ class Activity extends Model
 
 
     /**
-     * An Activity belongs to an Activitybook and has many Tasklists
+     * An Activity belongs to an Activitybook
      * @follow NEVER
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function activitybook()
     {
         return $this->belongsTo('App\Activitybook');
-	return $this->hasMany('App\Tasklists');
+    }
+    
+    /**
+     * An Activity has many tasklists
+     * @follow NEVER
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function tasklists()
+    {
+    	return $this->hasMany('App\Tasklists');
     }
 
 }
