@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Tasks extends Model
+class Task extends Model
 {
     /**
      * The database table used by the model.
@@ -30,7 +30,7 @@ class Tasks extends Model
 
     /**
      * A Task belongs to a Tasklist
-     * @follow NEVER
+     * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function tasklist()
