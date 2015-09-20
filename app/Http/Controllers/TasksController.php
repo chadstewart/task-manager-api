@@ -55,7 +55,7 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        //return Task::with('tasks')->findOrFail($id);
+        return Task::with('tasklist')->findOrFail($id);
     }
 
     /**

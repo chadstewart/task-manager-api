@@ -11,7 +11,7 @@ class Tasklist extends Model
      *
      * @var string
      */
-    protected $table = 'Tasklist';
+    protected $table = 'tasklists';
 
     /**
      * The attributes that are mass assignable.
@@ -43,7 +43,7 @@ class Tasklist extends Model
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function activitybook()
+    public function tasks()
     {
         return $this->hasMany('App\Task');
     }
