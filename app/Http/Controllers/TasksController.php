@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Task;
+use Dingo\Api\Routing\Helpers;
+
 
 class TasksController extends Controller
 {
@@ -16,7 +19,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        return 'Return the list of all tasks';
+        return Task::all();
     }
 
     /**
@@ -37,7 +40,11 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Task::create($request->all())){
+            return "Task created successfully.";
+        } else{
+            return $this->response->error('Task could not be created.', 404);
+	}
     }
 
     /**
@@ -48,7 +55,7 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        //
+        //return Task::with('tasks')->findOrFail($id);
     }
 
     /**
@@ -71,7 +78,12 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $Task = Task::findOrFail($id);
+        if($Task->update($request->all())){
+            return "Task updated successfully.";
+        } else{
+            return $this->response->error('Task could not be created.', 404);
+        }
     }
 
     /**
@@ -82,6 +94,10 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(Task::destroy($id)){
+            return "Task deleted successfully.";
+        } else{
+            return $this->response->error('Task does not exist.', 404);
+        }
     }
 }
