@@ -30,7 +30,7 @@ class Activity extends Model
 
     /**
      * An Activity belongs to an Activitybook
-     * @follow NEVER
+     * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function activitybook()
@@ -40,12 +40,12 @@ class Activity extends Model
     
     /**
      * An Activity has many tasklists
-     * @follow NEVER
+     * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function tasklists()
     {
-    	return $this->hasMany('App\Tasklists');
+    	return $this->hasMany('App\Tasklist');
     }
 
 }
