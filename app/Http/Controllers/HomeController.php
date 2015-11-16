@@ -35,11 +35,11 @@ class HomeController extends Controller
             'tasks_url' => url('/tasks'),
             'task_url' => url('/tasks/{task}'),
             'tasklists_url' => url('/tasklists'),
-            'tasklist_url' => url('/tasklists/{tasklist}')
+            'tasklist_url' => url('/tasklists/{tasklist}'),
             //'checklists_url' => url('/checklists'),
             //need to be done later
-            //'users_url' => url('/users'),
-            //'user_url' => url('/users/{user}'),
+            'users_url' => url('/users'),
+            'user_url' => url('/users/{user}')
         ];
     }
 }
