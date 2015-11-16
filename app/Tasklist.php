@@ -4,21 +4,21 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Activity extends Model
+class Tasklist extends Model
 {
-    /**
+   /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'activities';
+    protected $table = 'tasklists';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'category', 'activitybook_id'];
+    protected $fillable = ['name', 'creation', 'completed', 'active', 'activity_id', 'reminder_id', 'geolocation_id'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -29,23 +29,23 @@ class Activity extends Model
 
 
     /**
-     * An Activity belongs to an Activitybook
+     * An Tasklist belongs to an Activity
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function activitybook()
     {
-        return $this->belongsTo('App\Activitybook');
+        return $this->belongsTo('App\Activity');
     }
     
     /**
-     * An Activity has many tasklists
+     * An Tasklist has many tasks
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function tasklists()
+    public function tasks()
     {
-    	return $this->hasMany('App\Tasklist');
+        return $this->hasMany('App\Task');
     }
-
+    
 }

@@ -6,11 +6,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Task;
+use App\Tasklist;
 use Dingo\Api\Routing\Helpers;
 
-
-class TasksController extends Controller
+class TasklistController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +18,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        return Task::all();
+        return Tasklist::all();
     }
 
     /**
@@ -40,10 +39,10 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        if(Task::create($request->all())){
-            return "Task created successfully.";
+        if(Tasklist::create($request->all())){
+            return "Tasklist created successfully.";
         } else{
-            return $this->response->error('Task could not be created.', 404);
+            return $this->response->error('Tasklist could not be created.', 404);
 	}
     }
 
@@ -55,7 +54,7 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        return Task::with('tasklist')->findOrFail($id);
+        return Tasklist::with('tasks')->findOrFail($id);
     }
 
     /**
@@ -78,11 +77,11 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $Task = Task::findOrFail($id);
-        if($Task->update($request->all())){
-            return "Task updated successfully.";
+        $Tasklist = Tasklist::findOrFail($id);
+        if($Tasklist->update($request->all())){
+            return "Tasklist updated successfully.";
         } else{
-            return $this->response->error('Task could not be created.', 404);
+            return $this->response->error('Tasklist could not be created.', 404);
         }
     }
 
@@ -94,10 +93,10 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        if(Task::destroy($id)){
-            return "Task deleted successfully.";
+        if(Tasklist::destroy($id)){
+            return "Tasklist deleted successfully.";
         } else{
-            return $this->response->error('Task does not exist.', 404);
+            return $this->response->error('Tasklist does not exist.', 404);
         }
     }
 }

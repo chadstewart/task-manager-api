@@ -17,6 +17,10 @@ $api->version('v1', function ($api) {
 	$api->get('/', 'App\Http\Controllers\HomeController@index');
 	$api->resource('tasks', 'App\Http\Controllers\TasksController');
 	$api->resource('activitybooks', 'App\Http\Controllers\ActivitybookController');
+	$api->resource('activities', 'App\Http\Controllers\ActivityController');
+	$api->resource('tasklists', 'App\Http\Controllers\TasklistController');
+	$api->resource('users', 'App\Http\Controllers\UserController');
+	$api->resource('authenticate', 'App\Http\Controllers\AuthenticateController');
 });
 
 

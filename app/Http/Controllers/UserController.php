@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Hash;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Task;
+use App\User;
 use Dingo\Api\Routing\Helpers;
 
-
-class TasksController extends Controller
+class UserController extends Controller
 {
+    use Helpers;
+
     /**
      * Display a listing of the resource.
      *
@@ -19,18 +21,9 @@ class TasksController extends Controller
      */
     public function index()
     {
-        return Task::all();
+        return User::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,11 +33,13 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        if(Task::create($request->all())){
-            return "Task created successfully.";
+	$userInput = $request->all();
+	$userInput["password"] = Hash::make($userInput["password"]);
+        if(User::create($userInput)){
+            return "User created successfully.";
         } else{
-            return $this->response->error('Task could not be created.', 404);
-	}
+            return $this->response->error('User could not be created.', 404);
+        }
     }
 
     /**
@@ -55,19 +50,9 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        return Task::with('tasklist')->findOrFail($id);
+       return User::findOrFail($id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -78,11 +63,15 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $Task = Task::findOrFail($id);
-        if($Task->update($request->all())){
-            return "Task updated successfully.";
+	$userInput = $request->all();
+	if ($userInput->has("password")) {
+    		$userInput["password"] = Hash::make($userInput["password"]);
+	}
+        $User = User::findOrFail($id);
+        if($User->update($userInput)){
+            return "User updated successfully.";
         } else{
-            return $this->response->error('Task could not be created.', 404);
+            return $this->response->error('User could not be updated.', 404);
         }
     }
 
@@ -94,10 +83,10 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        if(Task::destroy($id)){
-            return "Task deleted successfully.";
+        if(User::destroy($id)){
+            return "User deleted successfully.";
         } else{
-            return $this->response->error('Task does not exist.', 404);
+            return $this->response->error('User does not exist.', 404);
         }
     }
 }

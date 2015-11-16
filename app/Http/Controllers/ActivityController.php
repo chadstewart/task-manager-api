@@ -6,11 +6,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Task;
+use App\Activity;
 use Dingo\Api\Routing\Helpers;
 
-
-class TasksController extends Controller
+class ActivityController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,17 +18,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        return Task::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
+        return Activity::all();
     }
 
     /**
@@ -40,10 +29,10 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        if(Task::create($request->all())){
-            return "Task created successfully.";
+        if(Activity::create($request->all())){
+            return "Activity created successfully.";
         } else{
-            return $this->response->error('Task could not be created.', 404);
+            return $this->response->error('Activity could not be created.', 404);
 	}
     }
 
@@ -55,18 +44,7 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        return Task::with('tasklist')->findOrFail($id);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
+        return Activity::with('tasklists')->findOrFail($id);
     }
 
     /**
@@ -78,11 +56,11 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $Task = Task::findOrFail($id);
-        if($Task->update($request->all())){
-            return "Task updated successfully.";
+        $Activity = Activity::findOrFail($id);
+        if($Activity->update($request->all())){
+            return "Activity updated successfully.";
         } else{
-            return $this->response->error('Task could not be created.', 404);
+            return $this->response->error('Activity could not be created.', 404);
         }
     }
 
@@ -94,10 +72,10 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        if(Task::destroy($id)){
-            return "Task deleted successfully.";
+        if(Activity::destroy($id)){
+            return "Activity deleted successfully.";
         } else{
-            return $this->response->error('Task does not exist.', 404);
+            return $this->response->error('Activity does not exist.', 404);
         }
     }
 }

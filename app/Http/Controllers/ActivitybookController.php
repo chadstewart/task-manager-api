@@ -48,7 +48,7 @@ class ActivitybookController extends Controller
      */
     public function show($id)
     {
-        return Activitybook::with('activities')->findOrFail($id);
+       return Activitybook::with('activities')->findOrFail($id);
     }
 
 
