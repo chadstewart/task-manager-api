@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        return User::all()->toJson();
     }
 
 
@@ -50,7 +50,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-       return User::findOrFail($id);
+       return User::findOrFail($id)->toJson();
     }
 
 

@@ -19,7 +19,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        return Task::all();
+        return Task::all()->toJson();
     }
 
     /**
@@ -55,7 +55,7 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        return Task::with('tasklist')->findOrFail($id);
+        return Task::with('tasklist')->findOrFail($id)->toJson();
     }
 
     /**

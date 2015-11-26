@@ -18,7 +18,7 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        return Activity::all();
+        return Activity::all()->toJson();
     }
 
     /**
@@ -44,7 +44,7 @@ class ActivityController extends Controller
      */
     public function show($id)
     {
-        return Activity::with('tasklists')->findOrFail($id);
+        return Activity::with('tasklists')->findOrFail($id)->toJson();
     }
 
     /**

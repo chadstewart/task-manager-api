@@ -21,7 +21,7 @@ class ActivitybookController extends Controller
      */
     public function index()
     {
-        return Activitybook::all();
+        return Activitybook::all()->toJson();
     }
 
 
@@ -48,7 +48,7 @@ class ActivitybookController extends Controller
      */
     public function show($id)
     {
-       return Activitybook::with('activities')->findOrFail($id);
+       return Activitybook::with('activities')->findOrFail($id)->toJson();
     }
 
 
