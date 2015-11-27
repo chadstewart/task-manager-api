@@ -39,8 +39,8 @@ class TasklistController extends Controller
      */
     public function store(Request $request)
     {
-        if(Tasklist::create($request->all())){
-            return "Tasklist created successfully.";
+        if($tasklist = Tasklist::create($request->all())){
+            return $tasklist->toJson();
         } else{
             return $this->response->error('Tasklist could not be created.', 404);
 	}

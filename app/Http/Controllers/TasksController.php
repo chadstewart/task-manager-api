@@ -40,8 +40,8 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        if(Task::create($request->all())){
-            return "Task created successfully.";
+        if($task = Task::create($request->all())){
+            return $task->toJson();
         } else{
             return $this->response->error('Task could not be created.', 404);
 	}

@@ -29,8 +29,8 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        if(Activity::create($request->all())){
-            return "Activity created successfully.";
+        if($activity = Activity::create($request->all())){
+            return $activity->toJson();
         } else{
             return $this->response->error('Activity could not be created.', 404);
 	}

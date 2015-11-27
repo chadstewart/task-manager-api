@@ -33,8 +33,8 @@ class ActivitybookController extends Controller
      */
     public function store(Request $request)
     {
-        if(Activitybook::create($request->all())){
-            return "Activitybook created successfully.";
+        if($activitybook = Activitybook::create($request->all())){
+            return $activitybook->toJson();
         } else{
             return $this->response->error('Activitybook could not be created.', 404);
         }
