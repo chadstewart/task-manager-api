@@ -29,10 +29,13 @@ class TasklistController extends Controller
      */
     public function index()
     {
-	if($Tasklist = Tasklist::all()) {
-        return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
-    } else {
-            return $this->response->error('No Tasklists found.', 404);
+	try{
+		if($Tasklist = Tasklist::all()) {
+			return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
+		}
+    }
+	catch(\Exception $e) {
+            return response()->json('No Tasklists found.', 404);
         }
     }
 
@@ -45,10 +48,12 @@ class TasklistController extends Controller
      */
     public function store(Request $request)
     {
-        if($Tasklist = Tasklist::create($request->all())){
-            return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('Tasklist could not be created.', 400);
+	try{
+		if($Tasklist = Tasklist::create($request->all())){
+		    return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
+		}
+	} catch(\Exception $e){
+            return response()->json('Tasklist could not be created.', 400);
         }
     }
 
@@ -60,10 +65,13 @@ class TasklistController extends Controller
      */
     public function show($id)
     {
-	 if($Tasklist = Tasklist::with('tasks')->findOrFail($id)){
-		return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
-	} else{
-            return $this->response->error('No Tasklists found.', 404);
+	 try{
+		 if($Tasklist = Tasklist::with('tasks')->findOrFail($id)){
+			return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('No Tasklists found.', 404);
         }
     }
 
@@ -77,14 +85,20 @@ class TasklistController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if($Tasklist = Tasklist::findOrFail($id)){
-		if($Tasklist->update($request->all())){
-		    return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
-		} else{
-		    return $this->response->error('Tasklist could not be updated.', 400);
+	try{
+		if($Tasklist = Tasklist::findOrFail($id)){
+			try{
+				if($Tasklist->update($request->all())){
+				    return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
+				}
+			}
+			catch(\Exception $e){
+			    return response()->json('Tasklist could not be updated.', 400);
+			}
 		}
-	} else{
-            return $this->response->error('No Tasklists found.', 404);
+	}
+	catch(\Exception $e){
+            return response()->json('No Tasklists found.', 404);
         }
     }
 
@@ -96,10 +110,13 @@ class TasklistController extends Controller
      */
     public function destroy($id)
     {
-        if(Tasklist::destroy($id)){
-            return response("Tasklist deleted successfully.", 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('Tasklist does not exist.', 404);
+	try{
+		if(Tasklist::destroy($id)){
+		    return response()->json('Tasklist deleted successfully.', 200);
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('Tasklist does not exist.', 404);
         }
     }
 }

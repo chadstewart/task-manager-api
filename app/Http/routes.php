@@ -21,6 +21,7 @@ $api->version('v1', function ($api) {
 	$api->resource('tasklists', 'App\Http\Controllers\TasklistController');
 	$api->resource('users', 'App\Http\Controllers\UserController');
 	$api->resource('authenticate', 'App\Http\Controllers\AuthenticateController');
+	$api->get('usercredentials', 'App\Http\Controllers\AuthenticateController@getAuthenticatedUser');
 });
 
 

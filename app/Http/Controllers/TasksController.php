@@ -30,10 +30,13 @@ class TasksController extends Controller
      */
     public function index()
     {
-	if($Task = Task::all()) {
-        return response($Task->toJson(), 200)->header('Content-Type', 'json');
-    } else {
-            return $this->response->error('No Tasks found.', 404);
+	try{
+		if($Task = Task::all()) {
+			return response($Task->toJson(), 200)->header('Content-Type', 'json');
+		}
+    }
+	catch(\Exception $e) {
+            return response()->json('No Tasks found.', 404);
         }
     }
 
@@ -46,10 +49,12 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        if($Task = Task::create($request->all())){
-            return response($Task->toJson(), 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('Task could not be created.', 400);
+	try{
+		if($Task = Task::create($request->all())){
+		    return response($Task->toJson(), 200)->header('Content-Type', 'json');
+		}
+	} catch(\Exception $e){
+            return response()->json('Task could not be created.', 400);
         }
     }
 
@@ -61,10 +66,13 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-	 if($Task = Task::with('tasklist')->findOrFail($id)){
-		return response($Task->toJson(), 200)->header('Content-Type', 'json');
-	} else{
-            return $this->response->error('No Tasks found.', 404);
+	 try{
+		 if($Task = Task::with('tasklist')->findOrFail($id)){
+			return response($Task->toJson(), 200)->header('Content-Type', 'json');
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('No Tasks found.', 404);
         }
     }
 
@@ -78,14 +86,20 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if($Task = Task::findOrFail($id)){
-		if($Task->update($request->all())){
-		    return response($Task->toJson(), 200)->header('Content-Type', 'json');
-		} else{
-		    return $this->response->error('Task could not be updated.', 400);
+	try{
+		if($Task = Task::findOrFail($id)){
+			try{
+				if($Task->update($request->all())){
+				    return response($Task->toJson(), 200)->header('Content-Type', 'json');
+				}
+			}
+			catch(\Exception $e){
+			    return response()->json('Task could not be updated.', 400);
+			}
 		}
-	} else{
-            return $this->response->error('No Tasks found.', 404);
+	}
+	catch(\Exception $e){
+            return response()->json('No Tasks found.', 404);
         }
     }
 
@@ -97,10 +111,13 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        if(Task::destroy($id)){
-            return response("Task deleted successfully.", 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('Task does not exist.', 404);
+	try{
+		if(Task::destroy($id)){
+		    return response()->json('Task deleted successfully.', 200);
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('Task does not exist.', 404);
         }
     }
 }

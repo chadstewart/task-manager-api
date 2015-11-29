@@ -29,10 +29,13 @@ class ActivityController extends Controller
      */
     public function index()
     {
-	if($Activity = Activity::all()) {
-        return response($Activity->toJson(), 200)->header('Content-Type', 'json');
-    } else {
-            return $this->response->error('No Activities found.', 404);
+	try{
+		if($Activity = Activity::all()) {
+			return response($Activity->toJson(), 200)->header('Content-Type', 'json');
+		}
+    }
+	catch(\Exception $e) {
+            return response()->json('No Activities found.', 404);
         }
     }
 
@@ -45,10 +48,12 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        if($Activity = Activity::create($request->all())){
-            return response($Activity->toJson(), 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('Activity could not be created.', 400);
+	try{
+		if($Activity = Activity::create($request->all())){
+		    return response($Activity->toJson(), 200)->header('Content-Type', 'json');
+		}
+	} catch(\Exception $e){
+            return response()->json('Activity could not be created.', 400);
         }
     }
 
@@ -60,10 +65,13 @@ class ActivityController extends Controller
      */
     public function show($id)
     {
-	 if($Activity = Activity::with('tasklists')->findOrFail($id)){
-		return response($Activity->toJson(), 200)->header('Content-Type', 'json');
-	} else{
-            return $this->response->error('No Activities found.', 404);
+	 try{
+		 if($Activity = Activity::with('tasklists')->findOrFail($id)){
+			return response($Activity->toJson(), 200)->header('Content-Type', 'json');
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('No Activities found.', 404);
         }
     }
 
@@ -77,14 +85,20 @@ class ActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if($Activity = Activity::findOrFail($id)){
-		if($Activity->update($request->all())){
-		    return response($Activity->toJson(), 200)->header('Content-Type', 'json');
-		} else{
-		    return $this->response->error('Activity could not be updated.', 400);
+	try{
+		if($Activity = Activity::findOrFail($id)){
+			try{
+				if($Activity->update($request->all())){
+				    return response($Activity->toJson(), 200)->header('Content-Type', 'json');
+				}
+			}
+			catch(\Exception $e){
+			    return response()->json('Activity could not be updated.', 400);
+			}
 		}
-	} else{
-            return $this->response->error('No Activities found.', 404);
+	}
+	catch(\Exception $e){
+            return response()->json('No Activities found.', 404);
         }
     }
 
@@ -96,10 +110,13 @@ class ActivityController extends Controller
      */
     public function destroy($id)
     {
-        if(Activity::destroy($id)){
-            return response("Activity deleted successfully.", 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('Activity does not exist.', 404);
+	try{
+		if(Activity::destroy($id)){
+		    return response()->json('Activity deleted successfully.', 200);
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('Activity does not exist.', 404);
         }
     }
 }

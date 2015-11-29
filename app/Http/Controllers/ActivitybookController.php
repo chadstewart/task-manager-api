@@ -19,7 +19,7 @@ class ActivitybookController extends Controller
        // Apply the jwt.auth middleware to all methods in this controller
        // except for the authenticate method. We don't want to prevent
        // the user from retrieving their token if they don't already have it
-       //$this->middleware('jwt.auth');
+       $this->middleware('jwt.auth');
     }
 
     /**
@@ -29,10 +29,13 @@ class ActivitybookController extends Controller
      */
     public function index()
     {
-	if($Activitybook = Activitybook::where('user_id', '=', Input::get('userId'))->get()) {
-        return response($Activitybook->toJson(), 200)->header('Content-Type', 'json');
-    } else {
-            return $this->response->error('No Activitybooks found.', 404);
+	try{
+		if($Activitybook = Activitybook::all()) {
+			return response($Activitybook->toJson(), 200)->header('Content-Type', 'json');
+		}
+    }
+	catch(\Exception $e) {
+            return response()->json('No Activitybooks found.', 404);
         }
     }
 
@@ -45,10 +48,12 @@ class ActivitybookController extends Controller
      */
     public function store(Request $request)
     {
-        if($Activitybook = Activitybook::create($request->all())){
-            return response($Activitybook->toJson(), 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('Activitybook could not be created.', 400);
+	try{
+		if($Activitybook = Activitybook::create($request->all())){
+		    return response($Activitybook->toJson(), 200)->header('Content-Type', 'json');
+		}
+	} catch(\Exception $e){
+            return response()->json('Activitybook could not be created.', 400);
         }
     }
 
@@ -60,10 +65,13 @@ class ActivitybookController extends Controller
      */
     public function show($id)
     {
-	 if($Activitybook = Activitybook::with('activities')->findOrFail($id)){
-		return response($Activitybook->toJson(), 200)->header('Content-Type', 'json');
-	} else{
-            return $this->response->error('No Activitybooks found.', 404);
+	 try{
+		 if($Activitybook = Activitybook::with('activities')->findOrFail($id)){
+			return response($Activitybook->toJson(), 200)->header('Content-Type', 'json');
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('No Activitybooks found.', 404);
         }
     }
 
@@ -77,14 +85,20 @@ class ActivitybookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if($Activitybook = Activitybook::findOrFail($id)){
-		if($Activitybook->update($request->all())){
-		    return response($Activitybook->toJson(), 200)->header('Content-Type', 'json');
-		} else{
-		    return $this->response->error('Activitybook could not be updated.', 400);
+	try{
+		if($Activitybook = Activitybook::findOrFail($id)){
+			try{
+				if($Activitybook->update($request->all())){
+				    return response($Activitybook->toJson(), 200)->header('Content-Type', 'json');
+				}
+			}
+			catch(\Exception $e){
+			    return response()->json('Activitybook could not be updated.', 400);
+			}
 		}
-	} else{
-            return $this->response->error('No Activitybooks found.', 404);
+	}
+	catch(\Exception $e){
+            return response()->json('No Activitybooks found.', 404);
         }
     }
 
@@ -96,10 +110,13 @@ class ActivitybookController extends Controller
      */
     public function destroy($id)
     {
-        if(Activitybook::destroy($id)){
-            return response("Activitybook deleted successfully.", 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('Activitybook does not exist.', 404);
+	try{
+		if(Activitybook::destroy($id)){
+		    return response()->json('Activitybook deleted successfully.', 200);
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('Activitybook does not exist.', 404);
         }
     }
 }

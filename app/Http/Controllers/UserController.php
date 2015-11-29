@@ -29,10 +29,13 @@ class UserController extends Controller
      */
     public function index()
     {
-	if($User = User::all()) {
-        return response($User->toJson(), 200)->header('Content-Type', 'json');
-    } else {
-            return $this->response->error('No Users found.', 404);
+	try{
+		if($User = User::all()) {
+			return response($User->toJson(), 200)->header('Content-Type', 'json');
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('No Users found.', 404);
         }
     }
 
@@ -45,15 +48,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
    {
-	if($userInput = $request->all()){
-		$userInput["password"] = Hash::make($userInput["password"]);
-		if($User = User::create($userInput)){
-		    return response($User->toJson(), 200)->header('Content-Type', 'json');
-		} else{
-		    return $this->response->error('User could not be created.', 404);
+	try{
+		if($userInput = $request->all()){
+			$userInput["password"] = Hash::make($userInput["password"]);
+			try{
+				if($User = User::create($userInput)){
+				    return response($User->toJson(), 200)->header('Content-Type', 'json');
+				}
+			}
+			catch(\Exception $e){
+			    return response()->json('User could not be created.', 404);
+			}
 		}
-	} else {
-            return $this->response->error('No valid request was sent.', 400);
+	}catch(\Exception $e){
+            return response()->json('No valid request was sent.', 400);
         }
     }
 
@@ -65,10 +73,13 @@ class UserController extends Controller
      */
     public function show($id)
     {
-	 if($User = User::findOrFail($id)){
-		return response($User->toJson(), 200)->header('Content-Type', 'json');
-	} else{
-            return $this->response->error('No Users found.', 404);
+	try{
+		 if($User = User::findOrFail($id)){
+			return response($User->toJson(), 200)->header('Content-Type', 'json');
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('No Users found.', 404);
         }
     }
 
@@ -82,18 +93,23 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-	if($userInput = $request->all()){
-		if ($userInput["password"] != null) { //not the best implementation
-	    		$userInput["password"] = Hash::make($userInput["password"]);
+	try{
+		if($userInput = $request->all()){
+			if ($userInput["password"] != null) { //not the best implementation
+		    		$userInput["password"] = Hash::make($userInput["password"]);
+			}
+			try{
+				$User = User::findOrFail($id);
+				if($User->update($userInput)){
+					return response($User->toJson(), 200)->header('Content-Type', 'json');
+				}
+			}catch(\Exception $e){
+			    return response()->json('User could not be updated.', 404);
+			}
 		}
-		$User = User::findOrFail($id);
-		if($User->update($userInput)){
-		    return response($User->toJson(), 200)->header('Content-Type', 'json');
-		} else{
-		    return $this->response->error('User could not be updated.', 404);
-		}
-	} else {
-            return $this->response->error('No valid request was sent.', 400);
+	}
+	catch(\Exception $e){
+            return response()->json('No valid request was sent.', 400);
         }
     }
     /**
@@ -104,10 +120,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        if(User::destroy($id)){
-            return response('User deleted successfully.', 200)->header('Content-Type', 'json');
-        } else{
-            return $this->response->error('User does not exist.', 404);
+	try{
+		if(User::destroy($id)){
+		    return response('User deleted successfully.', 200)->header('Content-Type', 'json');
+		}
+	}
+	catch(\Exception $e){
+            return response()->json('User does not exist.', 404);
         }
     }
 }
