@@ -11,6 +11,17 @@ use Dingo\Api\Routing\Helpers;
 
 class TasklistController extends Controller
 {
+
+    use Helpers;
+
+    public function __construct()
+    {
+       // Apply the jwt.auth middleware to all methods in this controller
+       // except for the authenticate method. We don't want to prevent
+       // the user from retrieving their token if they don't already have it
+       $this->middleware('jwt.auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,18 +29,13 @@ class TasklistController extends Controller
      */
     public function index()
     {
-        return Tasklist::all()->toJson();
+	if($Tasklist = Tasklist::all()) {
+        return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
+    } else {
+            return $this->response->error('No Tasklists found.', 404);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -39,11 +45,11 @@ class TasklistController extends Controller
      */
     public function store(Request $request)
     {
-        if($tasklist = Tasklist::create($request->all())){
-            return $tasklist->toJson();
+        if($Tasklist = Tasklist::create($request->all())){
+            return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
         } else{
-            return $this->response->error('Tasklist could not be created.', 404);
-	}
+            return $this->response->error('Tasklist could not be created.', 400);
+        }
     }
 
     /**
@@ -54,19 +60,13 @@ class TasklistController extends Controller
      */
     public function show($id)
     {
-        return Tasklist::with('tasks')->findOrFail($id)->toJson();
+	 if($Tasklist = Tasklist::with('tasks')->findOrFail($id)){
+		return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
+	} else{
+            return $this->response->error('No Tasklists found.', 404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -77,11 +77,14 @@ class TasklistController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $Tasklist = Tasklist::findOrFail($id);
-        if($Tasklist->update($request->all())){
-            return "Tasklist updated successfully.";
-        } else{
-            return $this->response->error('Tasklist could not be created.', 404);
+        if($Tasklist = Tasklist::findOrFail($id)){
+		if($Tasklist->update($request->all())){
+		    return response($Tasklist->toJson(), 200)->header('Content-Type', 'json');
+		} else{
+		    return $this->response->error('Tasklist could not be updated.', 400);
+		}
+	} else{
+            return $this->response->error('No Tasklists found.', 404);
         }
     }
 
@@ -94,7 +97,7 @@ class TasklistController extends Controller
     public function destroy($id)
     {
         if(Tasklist::destroy($id)){
-            return "Tasklist deleted successfully.";
+            return response("Tasklist deleted successfully.", 200)->header('Content-Type', 'json');
         } else{
             return $this->response->error('Tasklist does not exist.', 404);
         }

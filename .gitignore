@@ -2,6 +2,7 @@
 /node_modules
 Homestead.yaml
 Homestead.json
+app/Http/Controllers/Archive/
 .env
 **/.DS_Store
 *~

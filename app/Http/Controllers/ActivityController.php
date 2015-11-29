@@ -11,6 +11,17 @@ use Dingo\Api\Routing\Helpers;
 
 class ActivityController extends Controller
 {
+
+    use Helpers;
+
+    public function __construct()
+    {
+       // Apply the jwt.auth middleware to all methods in this controller
+       // except for the authenticate method. We don't want to prevent
+       // the user from retrieving their token if they don't already have it
+       $this->middleware('jwt.auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +29,13 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        return Activity::all()->toJson();
+	if($Activity = Activity::all()) {
+        return response($Activity->toJson(), 200)->header('Content-Type', 'json');
+    } else {
+            return $this->response->error('No Activities found.', 404);
+        }
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -29,11 +45,11 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        if($activity = Activity::create($request->all())){
-            return $activity->toJson();
+        if($Activity = Activity::create($request->all())){
+            return response($Activity->toJson(), 200)->header('Content-Type', 'json');
         } else{
-            return $this->response->error('Activity could not be created.', 404);
-	}
+            return $this->response->error('Activity could not be created.', 400);
+        }
     }
 
     /**
@@ -44,8 +60,13 @@ class ActivityController extends Controller
      */
     public function show($id)
     {
-        return Activity::with('tasklists')->findOrFail($id)->toJson();
+	 if($Activity = Activity::with('tasklists')->findOrFail($id)){
+		return response($Activity->toJson(), 200)->header('Content-Type', 'json');
+	} else{
+            return $this->response->error('No Activities found.', 404);
+        }
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -56,11 +77,14 @@ class ActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $Activity = Activity::findOrFail($id);
-        if($Activity->update($request->all())){
-            return "Activity updated successfully.";
-        } else{
-            return $this->response->error('Activity could not be created.', 404);
+        if($Activity = Activity::findOrFail($id)){
+		if($Activity->update($request->all())){
+		    return response($Activity->toJson(), 200)->header('Content-Type', 'json');
+		} else{
+		    return $this->response->error('Activity could not be updated.', 400);
+		}
+	} else{
+            return $this->response->error('No Activities found.', 404);
         }
     }
 
@@ -73,7 +97,7 @@ class ActivityController extends Controller
     public function destroy($id)
     {
         if(Activity::destroy($id)){
-            return "Activity deleted successfully.";
+            return response("Activity deleted successfully.", 200)->header('Content-Type', 'json');
         } else{
             return $this->response->error('Activity does not exist.', 404);
         }

@@ -20,7 +20,7 @@ class AuthenticateController extends Controller
     public function index()
     {
         //
-    }
+    }        
 
    /**
      * Store a newly created resource in storage.
@@ -45,7 +45,10 @@ class AuthenticateController extends Controller
         }
 
         // if no errors are encountered we can return a JWT
-        return response()->json(compact('token'), 200);
+	return response()->json('Token was created successfully.', 200)->header('Token:', compact('token'));
 	
     }
+
+    
+
 }

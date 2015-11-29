@@ -14,6 +14,14 @@ class UserController extends Controller
 {
     use Helpers;
 
+    public function __construct()
+    {
+       // Apply the jwt.auth middleware to all methods in this controller
+       // except for the authenticate method. We don't want to prevent
+       // the user from retrieving their token if they don't already have it
+       $this->middleware('jwt.auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +29,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all()->toJson();
+	if($User = User::all()) {
+        return response($User->toJson(), 200)->header('Content-Type', 'json');
+    } else {
+            return $this->response->error('No Users found.', 404);
+        }
     }
 
 
@@ -32,13 +44,16 @@ class UserController extends Controller
      * @return Response
      */
     public function store(Request $request)
-    {
-	$userInput = $request->all();
-	$userInput["password"] = Hash::make($userInput["password"]);
-        if(User::create($userInput)){
-            return "User created successfully.";
-        } else{
-            return $this->response->error('User could not be created.', 404);
+   {
+	if($userInput = $request->all()){
+		$userInput["password"] = Hash::make($userInput["password"]);
+		if($User = User::create($userInput)){
+		    return response($User->toJson(), 200)->header('Content-Type', 'json');
+		} else{
+		    return $this->response->error('User could not be created.', 404);
+		}
+	} else {
+            return $this->response->error('No valid request was sent.', 400);
         }
     }
 
@@ -50,7 +65,11 @@ class UserController extends Controller
      */
     public function show($id)
     {
-       return User::findOrFail($id)->toJson();
+	 if($User = User::findOrFail($id)){
+		return response($User->toJson(), 200)->header('Content-Type', 'json');
+	} else{
+            return $this->response->error('No Users found.', 404);
+        }
     }
 
 
@@ -63,18 +82,20 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-	$userInput = $request->all();
-	if ($userInput->has("password")) {
-    		$userInput["password"] = Hash::make($userInput["password"]);
-	}
-        $User = User::findOrFail($id);
-        if($User->update($userInput)){
-            return "User updated successfully.";
-        } else{
-            return $this->response->error('User could not be updated.', 404);
+	if($userInput = $request->all()){
+		if ($userInput["password"] != null) { //not the best implementation
+	    		$userInput["password"] = Hash::make($userInput["password"]);
+		}
+		$User = User::findOrFail($id);
+		if($User->update($userInput)){
+		    return response($User->toJson(), 200)->header('Content-Type', 'json');
+		} else{
+		    return $this->response->error('User could not be updated.', 404);
+		}
+	} else {
+            return $this->response->error('No valid request was sent.', 400);
         }
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -84,7 +105,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         if(User::destroy($id)){
-            return "User deleted successfully.";
+            return response('User deleted successfully.', 200)->header('Content-Type', 'json');
         } else{
             return $this->response->error('User does not exist.', 404);
         }

@@ -12,6 +12,17 @@ use Dingo\Api\Routing\Helpers;
 
 class TasksController extends Controller
 {
+
+    use Helpers;
+
+    public function __construct()
+    {
+       // Apply the jwt.auth middleware to all methods in this controller
+       // except for the authenticate method. We don't want to prevent
+       // the user from retrieving their token if they don't already have it
+       $this->middleware('jwt.auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,18 +30,13 @@ class TasksController extends Controller
      */
     public function index()
     {
-        return Task::all()->toJson();
+	if($Task = Task::all()) {
+        return response($Task->toJson(), 200)->header('Content-Type', 'json');
+    } else {
+            return $this->response->error('No Tasks found.', 404);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,11 +46,11 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        if($task = Task::create($request->all())){
-            return $task->toJson();
+        if($Task = Task::create($request->all())){
+            return response($Task->toJson(), 200)->header('Content-Type', 'json');
         } else{
-            return $this->response->error('Task could not be created.', 404);
-	}
+            return $this->response->error('Task could not be created.', 400);
+        }
     }
 
     /**
@@ -55,19 +61,13 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        return Task::with('tasklist')->findOrFail($id)->toJson();
+	 if($Task = Task::with('tasklist')->findOrFail($id)){
+		return response($Task->toJson(), 200)->header('Content-Type', 'json');
+	} else{
+            return $this->response->error('No Tasks found.', 404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -78,11 +78,14 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $Task = Task::findOrFail($id);
-        if($Task->update($request->all())){
-            return "Task updated successfully.";
-        } else{
-            return $this->response->error('Task could not be created.', 404);
+        if($Task = Task::findOrFail($id)){
+		if($Task->update($request->all())){
+		    return response($Task->toJson(), 200)->header('Content-Type', 'json');
+		} else{
+		    return $this->response->error('Task could not be updated.', 400);
+		}
+	} else{
+            return $this->response->error('No Tasks found.', 404);
         }
     }
 
@@ -95,7 +98,7 @@ class TasksController extends Controller
     public function destroy($id)
     {
         if(Task::destroy($id)){
-            return "Task deleted successfully.";
+            return response("Task deleted successfully.", 200)->header('Content-Type', 'json');
         } else{
             return $this->response->error('Task does not exist.', 404);
         }
